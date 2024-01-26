@@ -1,74 +1,23 @@
 import streamlit as st
-import random
 
+def diagnose(symptoms):
+    # Perform some diagnosis logic here (for simplicity, just echoing the symptoms)
+    diagnosis_result = f"Based on your symptoms: {symptoms}"
+    return diagnosis_result
 
-def get_number(length: int) -> int:
-    return random.randint(1, length)
+# Streamlit app layout
+st.title("Doctor Assistance Website")
 
+# Form to input symptoms
+symptoms = st.text_area("Describe your symptoms:", height=100)
+if st.button("Submit"):
+    if symptoms:
+        # Call the diagnosis function
+        result = diagnose(symptoms)
+        # Display the diagnosis result
+        st.success(result)
+    else:
+        st.warning("Please describe your symptoms before submitting.")
 
-def init(length: int = 100, post_init=False):
-    if not post_init:
-        st.session_state.input = 0
-        st.session_state.win = 0
-    st.session_state.number = get_number(length)
-    st.session_state.tries = 0
-    st.session_state.over = False
-
-
-def restart():
-    init(st.session_state.length, post_init=True)
-    st.session_state.input += 1
-
-
-def main():
-    st.write(
-        """
-        # 🔢 Guess Number
-        """
-    )
-
-    if 'number' not in st.session_state:
-        init()
-
-    reset, win, set_range = st.columns([0.39, 1, 1])
-    reset.button('New game', on_click=restart)
-
-    with set_range.expander('Settings'):
-        st.select_slider(
-            'Set max range',
-            [10**i for i in range(1, 6)],
-            value=100,
-            key='length',
-            on_change=restart,
-        )
-
-    placeholder, debug = st.empty(), st.empty()
-    guess = placeholder.number_input(
-        f'Enter your guess from 1 - {st.session_state.length}',
-        key=st.session_state.input,
-        min_value=0,
-        max_value=st.session_state.length,
-    )
-
-    if guess:
-        st.session_state.tries += 1
-        if guess < st.session_state.number:
-            debug.warning(f'{guess} is too low!')
-        elif guess > st.session_state.number:
-            debug.warning(f'{guess} is too high!')
-        else:
-            debug.success(
-                f'Yay! you guessed it right, it only took you {st.session_state.tries} tries 🎈'
-            )
-            st.session_state.over = True
-            st.session_state.win += 1
-            placeholder.empty()
-
-    win.button(f'🏆 {st.session_state.win}')
-
-
-if __name__ == '__main__':
-    main()
-    
-
-
+# Additional information or instructions
+st.markdown("If you are experiencing an emergency, please call emergency services.")
