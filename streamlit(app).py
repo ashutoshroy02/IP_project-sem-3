@@ -13,7 +13,7 @@ symptoms = st.text_area("Describe your symptoms:", height=100)
 if st.button("Submit"):
     if symptoms:
         # Call the diagnosis function
-        result = diagnose(f"you"{symptoms})
+        result = diagnose(symptoms)
         # Display the diagnosis result
         st.success(result)
     else:
